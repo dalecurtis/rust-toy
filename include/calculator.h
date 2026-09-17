@@ -1,4 +1,5 @@
 #pragma once
+#include "calc_def.h"
 #include <cstddef>
 #include <cstdint>
 #include <type_traits>
@@ -100,6 +101,7 @@ struct ICalculator;
 enum class CalcStatus : ::std::int32_t {
   CALC_OK = 0,
   CALC_ERR_NULL_PTR = -1,
+  CALC_ERR_INVALID_OPTION = -2,
 };
 using enum CalcStatus;
 #endif // CXXBRIDGE1_ENUM_CalcStatus
@@ -107,10 +109,13 @@ using enum CalcStatus;
 #ifndef CXXBRIDGE1_STRUCT_ICalculator
 #define CXXBRIDGE1_STRUCT_ICalculator
 struct ICalculator final : public ::rust::Opaque {
-  ::std::int64_t add(::std::int64_t a, ::std::int64_t b) const noexcept;
-  ::std::int64_t subtract(::std::int64_t a, ::std::int64_t b) const noexcept;
-  ::std::int64_t multiply(::std::int64_t a, ::std::int64_t b) const noexcept;
-  ::std::int64_t divide(::std::int64_t a, ::std::int64_t b) const noexcept;
+  ::CalcStatus Initialize(::SCalcParam const *param) noexcept;
+  ::std::int64_t add(::std::int64_t a, ::std::int64_t b) noexcept;
+  ::std::int64_t subtract(::std::int64_t a, ::std::int64_t b) noexcept;
+  ::std::int64_t multiply(::std::int64_t a, ::std::int64_t b) noexcept;
+  ::std::int64_t divide(::std::int64_t a, ::std::int64_t b) noexcept;
+  ::CalcStatus SetOption(::CALC_OPTION option_id, ::c_void *option) noexcept;
+  ::CalcStatus GetOption(::CALC_OPTION option_id, ::c_void *option) noexcept;
   ~ICalculator() = delete;
 
 private:
